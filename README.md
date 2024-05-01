@@ -28,7 +28,7 @@ function App() {
 }
 ```
 
-![demo1](https://github.com/knalum/react-minimalistic-gantt/assets/demo1.png)
+![demo1](https://github.com/knalum/react-minimalistic-gantt/blob/36faefd2b26d0bbfb3d0f382f155a83abacbccdf/assets/demo1.png?raw=true)
 
 ### Props
 - tasks: Array of `Task` objects
