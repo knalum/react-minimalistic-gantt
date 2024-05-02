@@ -21,8 +21,12 @@
     }
   },
   "license": "MIT",
-  "keywords": ["gantt","timeline","scheduler"],
-  "version": "0.0.19",
+  "keywords": [
+    "gantt",
+    "timeline",
+    "scheduler"
+  ],
+  "version": "0.0.20",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -31,8 +35,7 @@
     "preview": "vite preview",
     "test": "jest"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
