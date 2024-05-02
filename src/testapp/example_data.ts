@@ -1,4 +1,4 @@
-import {Task} from "../component/GanttChart.tsx";
+import {Task} from "../GanttChart.tsx";
 
 export function createSingleTaskLaneExample(): Task[] {
     return [

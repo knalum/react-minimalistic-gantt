@@ -7,9 +7,10 @@ export default defineConfig({
     build: {
         outDir:"dist",
         lib: {
-            entry: path.resolve(__dirname, "src/component/index.ts"),
+            entry: path.resolve(__dirname, "src/index.ts"),
             name: "react-minimalistic-gantt",
-            fileName: (format) => `index.${format}.js`,
+            fileName: (format) => `index.${format}.js`,formats:["es","cjs","umd"],
+
         },
         rollupOptions: {
             external: ["react", "react-dom"],

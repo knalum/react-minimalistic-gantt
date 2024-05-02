@@ -1,9 +1,9 @@
-import {GanttChart, Task} from "../component/GanttChart.tsx";
+import {GanttChart, Task} from "../GanttChart.tsx";
 import {createVanillaTasks} from "./example_data.ts";
 import {useLocalStorage} from "@uidotdev/usehooks";
 import {useState} from "react";
 import {Controls, initEndDate, initStartDate} from "./Controls.tsx";
-import {DateRange} from "../component";
+import {DateRange} from "../";
 
 export function TestApp() {
     const [resolution, setResolution] = useLocalStorage<DateRange>("0", DateRange.WEEK)

@@ -1,6 +1,6 @@
 import React from "react";
-import {formatDate, formatDateToYYYYMMDD, getEndOfWeek, getStartOfWeek} from "../component/date_utils.ts";
-import {DateRange} from "../component/GanttChart.tsx";
+import {formatDate, formatDateToYYYYMMDD, getEndOfWeek, getStartOfWeek} from "../date_utils.ts";
+import {DateRange} from "../GanttChart.tsx";
 
 export interface ControlsProps {
     resolution: DateRange

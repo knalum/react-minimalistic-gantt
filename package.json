@@ -4,8 +4,7 @@
   "repository": "https://github.com/knalum/react-minimalistic-gantt",
   "homepage": "https://github.com/knalum/react-minimalistic-gantt",
   "files": [
-    "/dist/index.es.js",
-    "/dist/component"
+    "/dist/*"
   ],
   "publishConfig": {
     "access": "public"
@@ -13,14 +12,16 @@
   "private": false,
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
+  "main": "dist/index.umd.js",
   "exports": {
     ".": {
       "import": "./dist/index.es.js",
-      "types": "./dist/component/index.d.ts"
+      "require": "./dist/index.umd.js",
+      "types": "./dist/index.d.ts"
     }
   },
-  "version": "0.0.12",
-  "type": "module",
+  "license": "MIT",
+  "version": "0.0.18",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
