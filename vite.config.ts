@@ -5,6 +5,7 @@ import dts from "vite-plugin-dts";
 
 export default defineConfig({
     build: {
+        outDir:"dist",
         lib: {
             entry: path.resolve(__dirname, "src/component/index.ts"),
             name: "react-minimalistic-gantt",
