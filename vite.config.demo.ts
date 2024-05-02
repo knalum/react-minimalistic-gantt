@@ -4,7 +4,7 @@ import dts from "vite-plugin-dts";
 
 export default defineConfig({
     build: {
-        outDir:"distdemo",
+        outDir:"docs",
         emptyOutDir: true,
     },
     plugins: [react(), dts()],
