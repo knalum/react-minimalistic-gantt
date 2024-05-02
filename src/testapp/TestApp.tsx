@@ -12,7 +12,7 @@ export function TestApp() {
     const [endDate, setEndDate] = useLocalStorage<Date>("end",initEndDate(new Date(), resolution))
 
     return (
-        <>
+        <><h4>react-minimalistic-gantt demo</h4>
             <Controls
                 resolution={resolution}
                 setResolution={setResolution}
