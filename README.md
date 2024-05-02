@@ -10,7 +10,7 @@ The package can be installed via npm:
 
 ```npm i react-minimalistic-gantt```
 
-### Usafe
+### Usage
 
 ```ts
 import {DateRange, GanttChart, Task} from "react-minimalistic-gantt"

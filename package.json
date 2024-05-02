@@ -21,6 +21,7 @@
     }
   },
   "license": "MIT",
+  "keywords": ["gantt","timeline","scheduler"],
   "version": "0.0.19",
   "scripts": {
     "dev": "vite",
