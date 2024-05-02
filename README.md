@@ -2,6 +2,9 @@
 
 A minimalistic gantt component for react
 
+#### Demo
+https://knalum.github.io/react-minimalistic-gantt/
+
 ### Installation
 The package can be installed via npm:
 
