@@ -17,10 +17,12 @@ export interface GanttChartOptions {
     locale?: string
     weekLiteral?: string
     hourFormat?: HourFormat
+    itemRowHeight?:number
 }
 
 export function GanttChart(props: GanttChartProps) {
     const {resolution, startDate, endDate, tasks, options} = props;
+    const itemRowHeight = options?.itemRowHeight || 20
 
     const windowSize = useWindowResize();
 
@@ -142,7 +144,7 @@ export function GanttChart(props: GanttChartProps) {
     }
 
     const calcSvgHeight = () => {
-        return numLanes().length * 20 + 40;
+        return numLanes().length * itemRowHeight + 40;
     }
 
     function filterTasks(tasks: Task[]): FilteredTask[] {
@@ -180,7 +182,7 @@ export function GanttChart(props: GanttChartProps) {
         <svg className={"row-names"} style={{height: calcSvgHeight()}}>
             {filteredTasks.map((task, idx) => (
                 <React.Fragment key={idx}>
-                    <text x={0} y={headerMargin + 20 * task.lane + 15}>{task.rowId}</text>
+                    <text x={0} y={headerMargin + itemRowHeight * task.lane + 15}>{task.rowId}</text>
                 </React.Fragment>
             ))}
         </svg>
@@ -213,9 +215,9 @@ export function GanttChart(props: GanttChartProps) {
                     <rect
                         key={idx}
                         x={0}
-                        y={headerMargin + 20 * idx}
+                        y={headerMargin + itemRowHeight * idx}
                         width={windowSize.width}
-                        height={20}
+                        height={itemRowHeight}
                         className={"lane-background"}
                     />
                 )
@@ -225,15 +227,15 @@ export function GanttChart(props: GanttChartProps) {
                     <g onClick={() => props.onItemClick?.(task)} className={"gantt-item-wrapper"}>
                         <rect
                             x={dateToX(task.start)}
-                            y={headerMargin + 20 * task.lane}
+                            y={headerMargin + itemRowHeight * task.lane}
                             width={dateToX(task.end) - dateToX(task.start)}
-                            height={20}
+                            height={itemRowHeight}
                             className={"gantt-item-rectangle"}
                         />
 
                         <text
                             x={dateToX(task.start)}
-                            y={headerMargin + 20 * task.lane + 15}
+                            y={headerMargin + itemRowHeight * task.lane + 15}
                         >
                             {task.displayName}</text>
                         <title>{props.itemTooltip?.(task)}</title>
