@@ -1,3 +1,5 @@
+export type HourFormat = "12" | "24"
+
 export function getStartOfWeek(date: Date) {
     const dayOfWeek = date.getDay();
     const diff = date.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
@@ -35,7 +37,7 @@ export function getNumberOfDays(startDate: Date, endDate: Date) {
     return Math.floor(diffInMs / (1000 * 60 * 60 * 24));
 }
 
-export function getNumberOfDaysInMonth(year:number, month:number) {
+export function getNumberOfDaysInMonth(year: number, month: number) {
     // Create a Date object for the first day of the next month
     const nextMonthFirstDay = new Date(year, month + 1, 1);
 
@@ -46,7 +48,7 @@ export function getNumberOfDaysInMonth(year:number, month:number) {
     return nextMonthFirstDay.getDate();
 }
 
-export function getISOWeekNumber(date:Date) {
+export function getISOWeekNumber(date: Date) {
     const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
     const daysOffset = (firstDayOfYear.getDay() - 1 + 7) % 7;
     const firstThursday = new Date(firstDayOfYear.getTime() + (4 - daysOffset) * 86400000); // 86400000 ms in a day
@@ -57,7 +59,20 @@ export function getISOWeekNumber(date:Date) {
 }
 
 
-export function dateOverlaps(taskStart:Date,taskEnd:Date,searchStart:Date,searchEnd:Date){
+export function dateOverlaps(taskStart: Date, taskEnd: Date, searchStart: Date, searchEnd: Date) {
     return (taskStart <= searchEnd && taskEnd >= searchStart) ||
         (searchStart <= taskEnd && searchEnd >= taskStart);
+}
+
+export function getHours(dt: Date, hourFormat: HourFormat | undefined): string {
+    const hours = dt.getHours();
+    const hours12 = hours % 12 || 12;
+    const amPm = hours < 12 ? 'AM' : 'PM';
+
+    if (hourFormat == "12") {
+        return `${hours12} ${amPm}`;
+    }
+    const formattedHours = ('0' + hours).slice(-2);
+    return `${formattedHours}`;
+
 }

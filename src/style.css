@@ -1,0 +1,24 @@
+#react-minimalistic-gantt {
+
+    .row-names {
+        width: 100px;
+    }
+
+    .lane-background {
+        fill: rgba(50, 50, 50, 0.1)
+    }
+
+    .vertical-line {
+        stroke: grey;
+        stroke-dasharray: 1 5;
+    }
+
+    .gantt-item-wrapper {
+    }
+
+    .gantt-item-rectangle {
+        fill: lightskyblue;
+        stroke: dodgerblue;
+        stroke-width: 1;
+    }
+}

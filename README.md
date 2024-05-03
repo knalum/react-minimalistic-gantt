@@ -3,9 +3,11 @@
 A minimalistic gantt component for react
 
 #### Demo
+
 https://knalum.github.io/react-minimalistic-gantt/
 
 ### Installation
+
 The package can be installed via npm:
 
 ```npm i react-minimalistic-gantt```
@@ -25,26 +27,38 @@ function App() {
     return (
         <GanttChart
             resolution = {DateRange.CUSTOM}
-            tasks = {tasks}
-            startDate = {new Date("2024-01-01T00:00:00")}
-            endDate = {new Date("2024-03-31T23:59:59")}
-        />
-    )
+    tasks = {tasks}
+    startDate = {new Date("2024-01-01T00:00:00")}
+    endDate = {new Date("2024-03-31T23:59:59")}
+    />
+)
 }
 ```
 
 ![demo1](https://github.com/knalum/react-minimalistic-gantt/blob/36faefd2b26d0bbfb3d0f382f155a83abacbccdf/assets/demo1.png?raw=true)
 
 ### Props
+
 - tasks: Array of `Task` objects
 - resolution: `DateRange` enum `(DAY,WEEK,MONTH,CUSTOM)`
 - startDate: Start of gantt interval `Date`
 - endDate: End of gantt interval `Date`
+- onItemClick: Callback when gantt item is clicked
+- itemTooltip: Tooltip for gantt item
+- options: GanttChartOptions
+
+GanttChartOptions:
+
+- locale: string for displaying header names, e.g `fr`
+- hourFormat: `12` or `24`
+- weekLiteral: string for displaying the Week word
 
 ### Task
+
 Tasks are items in the gantt chart.
 
 Tasks with equal rowId are placed on the same row.
 
 ### License
+
 Licensed under MIT license, see LICENSE for the full license.

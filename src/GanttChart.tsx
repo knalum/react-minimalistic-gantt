@@ -1,16 +1,27 @@
-import React, {useEffect, useState} from "react";
+import React, {ReactNode, useEffect, useState} from "react";
 import {useWindowResize} from "./window_resize.ts";
-import {dateOverlaps, formatDate, getISOWeekNumber, getNumberOfDays} from "./date_utils.ts";
+import {dateOverlaps, getHours, getISOWeekNumber, getNumberOfDays, HourFormat} from "./date_utils.ts";
+import "./style.css";
 
 export interface GanttChartProps {
     resolution: DateRange
     tasks: Task[]
     startDate: Date
     endDate: Date
+    options?: GanttChartOptions
+    onItemClick?: (task: Task) => void
+    itemTooltip?: (task: Task) => ReactNode
+}
+
+export interface GanttChartOptions {
+    locale?: string
+    weekLiteral?: string
+    hourFormat?: HourFormat
 }
 
 export function GanttChart(props: GanttChartProps) {
-    const {resolution, startDate, endDate, tasks} = props
+    const {resolution, startDate, endDate, tasks, options} = props;
+
     const windowSize = useWindowResize();
 
     const [filteredTasks, setFilteredTasks] = useState<FilteredTask[]>([])
@@ -54,13 +65,10 @@ export function GanttChart(props: GanttChartProps) {
     }
 
     function createColumnHeader(dt: Date): string {
-        const options = {weekday: 'long'};
         if (resolution == DateRange.DAY) {
-            // @ts-expect-error foo
-            return dt.getHours()
+            return getHours(dt, options?.hourFormat)
         } else if (resolution == DateRange.WEEK) {
-            // @ts-expect-error foo
-            return dt.toLocaleDateString('en-US', options) + " " + dt.getDate();
+            return dt.toLocaleDateString(options?.locale, {weekday: 'long'}) + " " + dt.getDate();
         } else if (resolution == DateRange.MONTH) {
             return "" + dt.getDate()
         } else if (resolution == DateRange.CUSTOM) {
@@ -71,13 +79,14 @@ export function GanttChart(props: GanttChartProps) {
 
     function createColumnHeaderTop(dt: Date): string {
         if (resolution == DateRange.DAY) {
-            return dt.toLocaleDateString("default", {weekday: "long"}) + " " + dt.getDate() + "." + dt.toLocaleString("default", {month: "long"})
+            return dt.toLocaleDateString(options?.locale, {weekday: "long"}) + " " + dt.getDate() + "." + dt.toLocaleString("default", {month: "long"})
         } else if (resolution == DateRange.WEEK) {
-            return "Week " + (getISOWeekNumber(dt) + 1)
+            const weekLiteral = options?.weekLiteral || "Week"
+            return weekLiteral + " " + (getISOWeekNumber(dt) + 1)
         } else if (resolution == DateRange.MONTH) {
-            return dt.toLocaleString('default', {month: 'long'});
+            return dt.toLocaleString(options?.locale, {month: 'long'});
         } else if (resolution == DateRange.CUSTOM) {
-            return dt.toLocaleString('default', {month: 'long'});
+            return dt.toLocaleString(options?.locale, {month: 'long'});
         }
         throw new Error("Col header top err")
     }
@@ -167,8 +176,8 @@ export function GanttChart(props: GanttChartProps) {
     }
     const headerMargin = 40
 
-    return (<>
-        <svg style={{width: 150, height: calcSvgHeight()}}>
+    return (<div id={"react-minimalistic-gantt"}>
+        <svg className={"row-names"} style={{height: calcSvgHeight()}}>
             {filteredTasks.map((task, idx) => (
                 <React.Fragment key={idx}>
                     <text x={0} y={headerMargin + 20 * task.lane + 15}>{task.rowId}</text>
@@ -181,7 +190,9 @@ export function GanttChart(props: GanttChartProps) {
                           x2={dateToX(line.start)}
                           y1={0}
                           y2={20}
-                          stroke={"grey"}/>
+                          stroke={"grey"}
+
+                    />
                     <text x={dateToX(line.start)} y={15}>{line.column}</text>
                 </React.Fragment>
             ))}
@@ -192,7 +203,8 @@ export function GanttChart(props: GanttChartProps) {
                           x2={dateToX(line.start)}
                           y1={20}
                           y2={calcSvgHeight()}
-                          stroke={"grey"}/>
+                          className={"vertical-line"}
+                    />
                 </React.Fragment>
             ))}
 
@@ -204,38 +216,37 @@ export function GanttChart(props: GanttChartProps) {
                         y={headerMargin + 20 * idx}
                         width={windowSize.width}
                         height={20}
-                        fill={"rgba(100,100,100,0.2)"}
+                        className={"lane-background"}
                     />
                 )
             ))}
 
             {filteredTasks.map((task, idx) => <React.Fragment key={idx}>
-                    <rect
-                        x={dateToX(task.start)}
-                        y={headerMargin + 20 * task.lane}
-                        width={dateToX(task.end) - dateToX(task.start)}
-                        height={20}
-                        fill={"green"}
-                    >
-                        <title>{formatDate(task.start)} - {formatDate(task.end)}</title>
-                    </rect>
+                    <g onClick={() => props.onItemClick?.(task)} className={"gantt-item-wrapper"}>
+                        <rect
+                            x={dateToX(task.start)}
+                            y={headerMargin + 20 * task.lane}
+                            width={dateToX(task.end) - dateToX(task.start)}
+                            height={20}
+                            className={"gantt-item-rectangle"}
+                        />
 
-                    <text
-                        x={dateToX(task.start)}
-                        y={headerMargin + 20 * task.lane + 15}
-                    >
-
-                        <title>{formatDate(task.start)} - {formatDate(task.end)}</title>
-                        {task.rowId}</text>
+                        <text
+                            x={dateToX(task.start)}
+                            y={headerMargin + 20 * task.lane + 15}
+                        >
+                            {task.displayName}</text>
+                        <title>{props.itemTooltip?.(task)}</title>
+                    </g>
                 </React.Fragment>
             )}
         </svg>
-        {/*<pre>{JSON.stringify(filteredTasks(), null, " ")}</pre>*/}
-    </>)
+    </div>)
 }
 
 export interface Task {
     rowId: string,
+    displayName: string,
     start: Date,
     end: Date,
 }
