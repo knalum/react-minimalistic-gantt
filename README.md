@@ -53,6 +53,7 @@ GanttChartOptions:
 - hourFormat: `12` or `24`
 - weekLiteral: string for displaying the Week word
 - itemRowHeight: number for adjusting row height for item rows
+- showItemNames: boolean for showing names on gantt items
 
 ### Task
 

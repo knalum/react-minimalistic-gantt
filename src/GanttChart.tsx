@@ -17,7 +17,8 @@ export interface GanttChartOptions {
     locale?: string
     weekLiteral?: string
     hourFormat?: HourFormat
-    itemRowHeight?:number
+    itemRowHeight?: number
+    showItemNames?: boolean
 }
 
 export function GanttChart(props: GanttChartProps) {
@@ -178,6 +179,24 @@ export function GanttChart(props: GanttChartProps) {
     }
     const headerMargin = 40
 
+    const header1 = calcHeader1()
+    const header2 = calcLines()
+
+    function calcWidth(idx: number) {
+        if (idx < header1.length - 1) {
+            return dateToX(header1[idx + 1].start) - dateToX(header1[idx].start)
+        }
+        return 150;
+    }
+
+    function calcWidth2(idx: number) {
+        if (idx < header2.length - 1) {
+            return dateToX(header2[idx + 1].start) - dateToX(header2[idx].start)
+        }
+        return 100;
+    }
+
+
     return (<div id={"react-minimalistic-gantt"}>
         <svg className={"row-names"} style={{height: calcSvgHeight()}}>
             {filteredTasks.map((task, idx) => (
@@ -187,7 +206,7 @@ export function GanttChart(props: GanttChartProps) {
             ))}
         </svg>
         <svg style={{width: windowSize.width, height: calcSvgHeight()}}>
-            {calcHeader1().map((line, idx) => (<React.Fragment key={idx}>
+            {header1.map((line, idx) => (<React.Fragment key={idx}>
                     <line x1={dateToX(line.start)}
                           x2={dateToX(line.start)}
                           y1={0}
@@ -195,12 +214,33 @@ export function GanttChart(props: GanttChartProps) {
                           stroke={"grey"}
 
                     />
-                    <text x={dateToX(line.start)} y={15}>{line.column}</text>
+
+                    <foreignObject x={dateToX(line.start)}
+                                   width={calcWidth(idx)}
+                                   height="100">
+                        <div style={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                        }}>
+                            {line.column}
+                        </div>
+                    </foreignObject>
                 </React.Fragment>
             ))}
             <line x1={0} x2={windowSize.width} y1={20} y2={20} stroke={"grey"}/>
-            {calcLines().map((line, idx) => (<React.Fragment key={idx}>
-                    <text x={dateToX(line.start) + 5} y={15 + 20}>{line.column}</text>
+            {header2.map((line, idx) => (<React.Fragment key={idx}>
+                    <foreignObject x={dateToX(line.start)}
+                                   y={20}
+                                   width={calcWidth2(idx)}
+                                   height="20">
+                        <div style={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                        }}>
+                            {line.column}
+                        </div>
+                    </foreignObject>
+
                     <line x1={dateToX(line.start)}
                           x2={dateToX(line.start)}
                           y1={20}
@@ -233,11 +273,21 @@ export function GanttChart(props: GanttChartProps) {
                             className={"gantt-item-rectangle"}
                         />
 
-                        <text
-                            x={dateToX(task.start)}
-                            y={headerMargin + itemRowHeight * task.lane + 15}
-                        >
-                            {task.displayName}</text>
+
+                        {props.options?.showItemNames && (
+                            <foreignObject x={dateToX(task.start)}
+                                           y={headerMargin + itemRowHeight * task.lane}
+                                           width={dateToX(task.end) - dateToX(task.start)}
+                                           height="100">
+                                <div style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis"
+                                }}>
+                                    {task.displayName}
+                                </div>
+                            </foreignObject>
+                        )}
                         <title>{props.itemTooltip?.(task)}</title>
                     </g>
                 </React.Fragment>
