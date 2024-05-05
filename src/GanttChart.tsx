@@ -55,14 +55,7 @@ export function GanttChart(props: GanttChartProps) {
         } else if (resolution == DateRange.MONTH) {
             return 24
         } else if (resolution == DateRange.CUSTOM) {
-            const numDays = getNumberOfDays(startDate, endDate)
-            if (numDays > 60) {
-                return 24 * 3
-            }
-            if (numDays > 30) {
-                return 24 * 2
-            }
-            return 24
+            return getNumberOfDays(startDate, endDate);
         }
         throw Error("Num hours error")
     }
