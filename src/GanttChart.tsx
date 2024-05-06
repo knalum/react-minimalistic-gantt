@@ -189,6 +189,10 @@ export function GanttChart(props: GanttChartProps) {
         return 100;
     }
 
+    function calcGanttItemTextXPos(task: FilteredTask): number {
+        const out = dateToX(task.start)
+        return out < 0 ? 0 : out;
+    }
 
     return (<div id={"react-minimalistic-gantt"}>
         <svg className={"row-names"} style={{height: calcSvgHeight()}}>
@@ -268,7 +272,7 @@ export function GanttChart(props: GanttChartProps) {
 
 
                         {props.options?.showItemNames && (
-                            <foreignObject x={dateToX(task.start)}
+                            <foreignObject x={calcGanttItemTextXPos(task)}
                                            y={headerMargin + itemRowHeight * task.lane}
                                            width={dateToX(task.end) - dateToX(task.start)}
                                            height="100">

@@ -17,7 +17,7 @@ export function createVanillaTasks(): Task[] {
         createTask2("id1", "Item 1", new Date("2024-04-20T00:00:00"), new Date("2024-04-27T23:59:00")),
         createTask2("id1", "Item 2 long name", new Date("2024-04-15T00:00:00"), new Date("2024-04-18T23:59:00")),
         createTask2("id3", "Item 3", new Date("2024-04-30T08:00:00"), new Date("2024-04-30T23:00:00")),
-        createTask2("id4", "Item 4", new Date("2024-05-01T03:00:00"), new Date("2024-05-01T23:00:00")),
+        createTask2("id4", "Item 4", new Date("2024-04-20T03:00:00"), new Date("2024-05-10T23:00:00")),
         createTask2("id5", "Item 5", new Date("2024-04-01T00:00:00"), new Date("2024-04-03T23:59:00")),
         createTask2("id6", "Item 6", new Date("2024-04-05T03:00:00"), new Date("2024-04-05T23:00:00")),
         createTask2("id7", "Item 7", new Date("2024-03-10T00:00:00"), new Date("2024-03-10T23:59:00")),
