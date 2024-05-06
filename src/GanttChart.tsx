@@ -10,6 +10,7 @@ export interface GanttChartProps {
     endDate: Date
     options?: GanttChartOptions
     onItemClick?: (task: Task) => void
+    onMouseEnter?:(task:Task)=>void
     itemTooltip?: (task: Task) => ReactNode
 }
 
@@ -261,7 +262,9 @@ export function GanttChart(props: GanttChartProps) {
             ))}
 
             {filteredTasks.map((task, idx) => <React.Fragment key={idx}>
-                    <g onClick={() => props.onItemClick?.(task)} className={"gantt-item-wrapper"}>
+                    <g
+                        onMouseEnter={()=>props.onMouseEnter?.(task)}
+                        onClick={() => props.onItemClick?.(task)} className={"gantt-item-wrapper"}>
                         <rect
                             x={dateToX(task.start)}
                             y={headerMargin + itemRowHeight * task.lane}
@@ -275,7 +278,7 @@ export function GanttChart(props: GanttChartProps) {
                             <foreignObject x={calcGanttItemTextXPos(task)}
                                            y={headerMargin + itemRowHeight * task.lane}
                                            width={dateToX(task.end) - dateToX(task.start)}
-                                           height="100">
+                                           height={itemRowHeight}>
                                 <div style={{
                                     whiteSpace: "nowrap",
                                     overflow: "hidden",

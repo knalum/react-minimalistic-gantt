@@ -44,6 +44,7 @@ function App() {
 - startDate: Start of gantt interval `Date`
 - endDate: End of gantt interval `Date`
 - onItemClick: Callback when gantt item is clicked
+- onMouseEnter: Callback when pointer enters gantt item
 - itemTooltip: Tooltip for gantt item
 - options: GanttChartOptions
 
