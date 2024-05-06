@@ -13,7 +13,7 @@ export default function TaskEdit(props: { task: Task, setTasks: (t: Task[]) => v
     function onSave() {
         const newTasks = [...props.tasks]
         newTasks.forEach(t => {
-            if (t.rowId === props.task.rowId) {
+            if (t.id === props.task.id) {
                 Object.assign(t, {...task})
             }
         })

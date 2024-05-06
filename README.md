@@ -19,17 +19,17 @@ import {DateRange, GanttChart, Task} from "react-minimalistic-gantt"
 
 function App() {
     const tasks: Task[] = [
-        {rowId: "row_id1", start: new Date("2024-01-01T08:00:00"), end: new Date("2024-01-02T16:00:00")},
-        {rowId: "row_id1", start: new Date("2024-01-03T11:00:00"), end: new Date("2024-01-05T12:00:00")},
-        {rowId: "row_id2", start: new Date("2024-01-10T11:00:00"), end: new Date("2024-01-12T12:00:00")},
-        {rowId: "row_id3", start: new Date("2024-02-15T11:00:00"), end: new Date("2024-02-20T12:00:00")},
+        {id: "id1", rowId: "row_id1", start: new Date("2024-01-01T08:00:00"), end: new Date("2024-01-02T16:00:00")},
+        {id: "id2", rowId: "row_id1", start: new Date("2024-01-03T11:00:00"), end: new Date("2024-01-05T12:00:00")},
+        {id: "id3", rowId: "row_id2", start: new Date("2024-01-10T11:00:00"), end: new Date("2024-01-12T12:00:00")},
+        {id: "id4", rowId: "row_id3", start: new Date("2024-02-15T11:00:00"), end: new Date("2024-02-20T12:00:00")},
     ]
     return (
         <GanttChart
             resolution = {DateRange.CUSTOM}
-    tasks = {tasks}
-    startDate = {new Date("2024-01-01T00:00:00")}
-    endDate = {new Date("2024-03-31T23:59:59")}
+            tasks = {tasks}
+            startDate = {new Date("2024-01-01T00:00:00")}
+            endDate = {new Date("2024-03-31T23:59:59")}
     />
 )
 }
@@ -47,6 +47,14 @@ function App() {
 - onMouseEnter: Callback when pointer enters gantt item
 - itemTooltip: Tooltip for gantt item
 - options: GanttChartOptions
+
+Task:
+
+- id: Unique id for a task item
+- rowId: Id for all tasks placed on same row
+- displayName: String to be displayed on a gantt item
+- start: Start date for a task
+- end: End date for a task
 
 GanttChartOptions:
 
