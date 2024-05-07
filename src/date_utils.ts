@@ -62,9 +62,9 @@ export function getISOWeekNumber(date: Date) {
 }
 
 
-export function dateOverlaps(taskStart: Date, taskEnd: Date, searchStart: Date, searchEnd: Date) {
-    return (taskStart <= searchEnd && taskEnd >= searchStart) ||
-        (searchStart <= taskEnd && searchEnd >= taskStart);
+export function dateOverlaps(itemStart: Date, itemEnd: Date, searchStart: Date, searchEnd: Date) {
+    return (itemStart <= searchEnd && itemEnd >= searchStart) ||
+        (searchStart <= itemEnd && searchEnd >= itemStart);
 }
 
 export function getHours(dt: Date, hourFormat: HourFormat | undefined): string {

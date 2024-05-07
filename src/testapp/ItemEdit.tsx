@@ -1,56 +1,56 @@
-import {Task} from "../GanttChart.tsx";
+import {Item} from "../GanttChart.tsx";
 import {useEffect, useState} from "react";
 import {formatDate, formatDateToYYYYMMDD} from "../date_utils.ts";
 
-export default function TaskEdit(props: { task: Task, setTasks: (t: Task[]) => void, tasks: Task[] }) {
-    const [task, setTask] = useState(props.task)
+export default function ItemEdit(props: { item: Item, setItems: (t: Item[]) => void, items: Item[] }) {
+    const [item, setItem] = useState(props.item)
 
 
     useEffect(() => {
-        setTask(props.task)
-    }, [props.task])
+        setItem(props.item)
+    }, [props.item])
 
     function onSave() {
-        const newTasks = [...props.tasks]
-        newTasks.forEach(t => {
-            if (t.id === props.task.id) {
-                Object.assign(t, {...task})
+        const newItems = [...props.items]
+        newItems.forEach(t => {
+            if (t.id === props.item.id) {
+                Object.assign(t, {...item})
             }
         })
-        props.setTasks(newTasks)
+        props.setItems(newItems)
     }
 
     return (
         <div>
-            {task.displayName}
+            {item.displayName}
             <br/>
-            start: {formatDate(task.start)}
+            start: {formatDate(item.start)}
             <br/>
-            end: {formatDate(task.end)}
+            end: {formatDate(item.end)}
             <br/>
 
-            <input type={"text"} value={task.displayName} onChange={e => {
-                setTask({...task, displayName: e.target.value})
+            <input type={"text"} value={item.displayName} onChange={e => {
+                setItem({...item, displayName: e.target.value})
             }}/>
 
-            <input type={"date"} value={formatDateToYYYYMMDD(task.start)}
+            <input type={"date"} value={formatDateToYYYYMMDD(item.start)}
                    onChange={e => {
                        const val = e.target.value
                        const date = new Date(val);
                        date.setHours(0)
                        date.setMinutes(0)
                        date.setSeconds(0)
-                       setTask({...task, start: date})
+                       setItem({...item, start: date})
                    }}
             />
-            <input type={"date"} value={formatDateToYYYYMMDD(task.end)}
+            <input type={"date"} value={formatDateToYYYYMMDD(item.end)}
                    onChange={e => {
                        const val = e.target.value
                        const date = new Date(val);
                        date.setHours(23)
                        date.setMinutes(59)
                        date.setSeconds(59)
-                       setTask({...task, end: date})
+                       setItem({...item, end: date})
                    }}
             />
 

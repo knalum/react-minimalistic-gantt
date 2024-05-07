@@ -5,11 +5,11 @@ test('Same date overlaps', () => {
 });
 
 test('Different date does not overlap', () => {
-    const taskStart = new Date();
-    taskStart.setDate(taskStart.getDate() - 2)
-    const taskEnd = new Date();
-    taskEnd.setDate(taskEnd.getDate() - 1)
-    expect(dateOverlaps(taskStart, taskEnd, new Date(), new Date())).toBeFalsy();
+    const itemStart = new Date();
+    itemStart.setDate(itemStart.getDate() - 2)
+    const itemEnd = new Date();
+    itemEnd.setDate(itemEnd.getDate() - 1)
+    expect(dateOverlaps(itemStart, itemEnd, new Date(), new Date())).toBeFalsy();
 });
 
 test("Get week no", () => {

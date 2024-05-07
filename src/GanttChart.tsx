@@ -5,13 +5,13 @@ import "./style.css";
 
 export interface GanttChartProps {
     resolution: Resolution
-    tasks: Task[]
+    items: Item[]
     startDate: Date
     endDate: Date
     options?: GanttChartOptions
-    onItemClick?: (task: Task) => void
-    onMouseEnter?: (task: Task) => void
-    itemTooltip?: (task: Task) => ReactNode
+    onItemClick?: (item: Item) => void
+    onMouseEnter?: (item: Item) => void
+    itemTooltip?: (item: Item) => ReactNode
 }
 
 export interface GanttChartOptions {
@@ -23,16 +23,16 @@ export interface GanttChartOptions {
 }
 
 export function GanttChart(props: GanttChartProps) {
-    const {resolution, startDate, endDate, tasks, options} = props;
+    const {resolution, startDate, endDate, items, options} = props;
     const itemRowHeight = options?.itemRowHeight || 20
 
     const windowSize = useWindowResize();
 
-    const [filteredTasks, setFilteredTasks] = useState<FilteredTask[]>([])
+    const [filteredItems, setFilteredItems] = useState<FilteredItems[]>([])
 
     useEffect(() => {
-        setFilteredTasks(filterTasks(tasks))
-    }, [tasks, startDate, endDate])
+        setFilteredItems(filterItems(items))
+    }, [items, startDate, endDate])
 
     function getNumLinesForResolution(): number {
         const numdays = getNumberOfDays(startDate, endDate);
@@ -160,8 +160,8 @@ export function GanttChart(props: GanttChartProps) {
         return numLanes().length * itemRowHeight + 40;
     }
 
-    function filterTasks(tasks: Task[]): FilteredTask[] {
-        const filteredTasks: FilteredTask[] = []
+    function filterItems(items: Item[]): FilteredItems[] {
+        const filteredItems: FilteredItems[] = []
         const searchStart = new Date(startDate)
         searchStart.setDate(searchStart.getDate())
 
@@ -170,24 +170,24 @@ export function GanttChart(props: GanttChartProps) {
 
         let laneIndex = 0;
         const laneObj: { [rowId: string]: number } = {}
-        tasks.filter(task => {
-            if (dateOverlaps(task.start, task.end, searchStart, searchEnd)) {
+        items.filter(item => {
+            if (dateOverlaps(item.start, item.end, searchStart, searchEnd)) {
 
-                if (laneObj[task.rowId] != null) {
+                if (laneObj[item.rowId] != null) {
                     // Put on same lane
-                    filteredTasks.push({...task, lane: laneObj[task.rowId]})
+                    filteredItems.push({...item, lane: laneObj[item.rowId]})
                 } else {
-                    laneObj[task.rowId] = laneIndex
-                    filteredTasks.push({...task, lane: laneIndex})
+                    laneObj[item.rowId] = laneIndex
+                    filteredItems.push({...item, lane: laneIndex})
                     laneIndex++
                 }
             }
         })
-        return filteredTasks
+        return filteredItems
     }
 
     const numLanes = () => {
-        return Array.of(...new Set(filteredTasks.map(t => t.rowId)));
+        return Array.of(...new Set(filteredItems.map(t => t.rowId)));
     }
     const headerMargin = 40
 
@@ -208,16 +208,16 @@ export function GanttChart(props: GanttChartProps) {
         return 100;
     }
 
-    function calcGanttItemTextXPos(task: FilteredTask): number {
-        const out = dateToX(task.start)
+    function calcGanttItemTextXPos(item: FilteredItems): number {
+        const out = dateToX(item.start)
         return out < 0 ? 0 : out;
     }
 
     return (<div id={"react-minimalistic-gantt"}>
         <svg className={"row-names"} style={{height: calcSvgHeight()}}>
-            {filteredTasks.map((task, idx) => (
+            {filteredItems.map((item, idx) => (
                 <React.Fragment key={idx}>
-                    <text x={0} y={headerMargin + itemRowHeight * task.lane + 15}>{task.rowId}</text>
+                    <text x={0} y={headerMargin + itemRowHeight * item.lane + 15}>{item.rowId}</text>
                 </React.Fragment>
             ))}
         </svg>
@@ -279,34 +279,34 @@ export function GanttChart(props: GanttChartProps) {
                 )
             ))}
 
-            {filteredTasks.map((task, idx) => <React.Fragment key={idx}>
+            {filteredItems.map((item, idx) => <React.Fragment key={idx}>
                     <g
-                        onMouseEnter={() => props.onMouseEnter?.(task)}
-                        onClick={() => props.onItemClick?.(task)} className={"gantt-item-wrapper"}>
+                        onMouseEnter={() => props.onMouseEnter?.(item)}
+                        onClick={() => props.onItemClick?.(item)} className={"gantt-item-wrapper"}>
                         <rect
-                            x={dateToX(task.start)}
-                            y={headerMargin + itemRowHeight * task.lane}
-                            width={dateToX(task.end) - dateToX(task.start)}
+                            x={dateToX(item.start)}
+                            y={headerMargin + itemRowHeight * item.lane}
+                            width={dateToX(item.end) - dateToX(item.start)}
                             height={itemRowHeight}
                             className={"gantt-item-rectangle"}
                         />
 
 
                         {props.options?.showItemNames && (
-                            <foreignObject x={calcGanttItemTextXPos(task)}
-                                           y={headerMargin + itemRowHeight * task.lane}
-                                           width={dateToX(task.end) - dateToX(task.start)}
+                            <foreignObject x={calcGanttItemTextXPos(item)}
+                                           y={headerMargin + itemRowHeight * item.lane}
+                                           width={dateToX(item.end) - dateToX(item.start)}
                                            height={itemRowHeight}>
                                 <div style={{
                                     whiteSpace: "nowrap",
                                     overflow: "hidden",
                                     textOverflow: "ellipsis"
                                 }}>
-                                    {task.displayName} - {task.id}
+                                    {item.displayName} - {item.id}
                                 </div>
                             </foreignObject>
                         )}
-                        <title>{props.itemTooltip?.(task)}</title>
+                        <title>{props.itemTooltip?.(item)}</title>
                     </g>
                 </React.Fragment>
             )}
@@ -314,7 +314,7 @@ export function GanttChart(props: GanttChartProps) {
     </div>)
 }
 
-export interface Task {
+export interface Item {
     id: string,
     rowId: string,
     displayName: string,
@@ -322,7 +322,7 @@ export interface Task {
     end: Date,
 }
 
-export interface FilteredTask extends Task {
+export interface FilteredItems extends Item {
     lane: number
 }
 

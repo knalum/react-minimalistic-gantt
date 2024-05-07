@@ -1,1 +1,1 @@
-export {GanttChart, Resolution, type Task} from "./GanttChart.tsx";
+export {GanttChart, Resolution, type Item} from "./GanttChart.tsx";
