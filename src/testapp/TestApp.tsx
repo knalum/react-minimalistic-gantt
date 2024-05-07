@@ -3,22 +3,22 @@ import {createVanillaTasks} from "./example_data.ts";
 import {useLocalStorage} from "@uidotdev/usehooks";
 import {useState} from "react";
 import {Controls, initEndDate, initStartDate} from "./Controls.tsx";
-import {DateRange} from "../";
+import {Resolution} from "../";
 import "./style.css"
 import TaskEdit from "./TaskEdit.tsx";
 
 export function TestApp() {
-    const [dateRange, setDateRange] = useLocalStorage<DateRange>("0", DateRange.WEEK)
+    const [resolution, setResolution] = useLocalStorage<Resolution>("0", Resolution.WEEK)
     const [tasks, setTasks] = useState<Task[]>(createVanillaTasks())
-    const [startDate, setStartDate] = useLocalStorage<Date>("start", initStartDate(new Date(), dateRange))
-    const [endDate, setEndDate] = useLocalStorage<Date>("end", initEndDate(new Date(), dateRange))
+    const [startDate, setStartDate] = useLocalStorage<Date>("start", initStartDate(new Date(), resolution))
+    const [endDate, setEndDate] = useLocalStorage<Date>("end", initEndDate(new Date(), resolution))
 
     const [selectedTask, setSelectedTask] = useState<Task | undefined>()
     return (
         <><h4>react-minimalistic-gantt demo</h4>
             <Controls
-                dateRange={dateRange}
-                setDateRange={setDateRange}
+                resolution={resolution}
+                setResolution={setResolution}
                 startDate={new Date(startDate)}
                 setStartDate={setStartDate}
                 endDate={new Date(endDate)}
@@ -26,7 +26,7 @@ export function TestApp() {
             />
             <hr/>
             <GanttChart
-                dateRange={dateRange}
+                resolution={resolution}
                 tasks={tasks}
                 startDate={new Date(startDate)}
                 endDate={new Date(endDate)}

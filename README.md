@@ -15,7 +15,7 @@ The package can be installed via npm:
 ### Usage
 
 ```ts
-import {DateRange, GanttChart, Task} from "react-minimalistic-gantt"
+import {Resolution, GanttChart, Task} from "react-minimalistic-gantt"
 
 function App() {
     const tasks: Task[] = [
@@ -26,7 +26,7 @@ function App() {
     ]
     return (
         <GanttChart
-            dateRange = {DateRange.CUSTOM}
+            resolution = {Resolution.MONTH}
             tasks = {tasks}
             startDate = {new Date("2024-01-01T00:00:00")}
             endDate = {new Date("2024-03-31T23:59:59")}
@@ -40,7 +40,7 @@ function App() {
 ### Props
 
 - tasks: Array of `Task` objects
-- dateRange: `DateRange` enum `(DAY,WEEK,MONTH,CUSTOM)`
+- resolution: `Resolution` enum `(DAY,WEEK,MONTH)`
 - startDate: Start of gantt interval `Date`
 - endDate: End of gantt interval `Date`
 - onItemClick: Callback when gantt item is clicked

@@ -1,10 +1,10 @@
 import React from "react";
 import {formatDate, formatDateToYYYYMMDD, getEndOfWeek, getStartOfWeek} from "../date_utils.ts";
-import {DateRange} from "../GanttChart.tsx";
+import {Resolution} from "../GanttChart.tsx";
 
 export interface ControlsProps {
-    dateRange: DateRange
-    setDateRange: React.Dispatch<React.SetStateAction<DateRange>>
+    resolution: Resolution
+    setResolution: React.Dispatch<React.SetStateAction<Resolution>>
     startDate: Date
     setStartDate: React.Dispatch<React.SetStateAction<Date>>
     endDate: Date
@@ -13,15 +13,15 @@ export interface ControlsProps {
 
 
 export function Controls(props: ControlsProps) {
-    const {dateRange, setDateRange, startDate, endDate, setEndDate, setStartDate} = props;
+    const {resolution, setResolution, startDate, endDate, setEndDate, setStartDate} = props;
 
     const onClickPrevious = () => {
         const newStartDate = new Date(startDate)
-        if (dateRange == DateRange.MONTH) {
+        if (resolution == Resolution.MONTH) {
             newStartDate.setMonth(startDate.getMonth() - 1)
-        } else if (dateRange == DateRange.WEEK) {
+        } else if (resolution == Resolution.WEEK) {
             newStartDate.setDate(newStartDate.getDate() - 7)
-        } else if (dateRange == DateRange.DAY) {
+        } else if (resolution == Resolution.DAY) {
             newStartDate.setDate(startDate.getDate() - 1)
         }
         newStartDate.setHours(0)
@@ -29,12 +29,12 @@ export function Controls(props: ControlsProps) {
         setStartDate(newStartDate)
 
         const newEndDate = new Date(newStartDate)
-        if (dateRange == DateRange.MONTH) {
+        if (resolution == Resolution.MONTH) {
             newEndDate.setMonth(newStartDate.getMonth() + 1)
             newEndDate.setDate(newEndDate.getDate() - 1)
-        } else if (dateRange == DateRange.WEEK) {
+        } else if (resolution == Resolution.WEEK) {
             newEndDate.setDate(newEndDate.getDate() + 6)
-        } else if (dateRange == DateRange.DAY) {
+        } else if (resolution == Resolution.DAY) {
             newEndDate.setDate(newStartDate.getDate())
         }
         newEndDate.setHours(23)
@@ -44,11 +44,11 @@ export function Controls(props: ControlsProps) {
 
     const onClickNext = () => {
         const newStartDate = new Date(startDate)
-        if (dateRange == DateRange.MONTH) {
+        if (resolution == Resolution.MONTH) {
             newStartDate.setMonth(startDate.getMonth() + 1)
-        } else if (dateRange == DateRange.WEEK) {
+        } else if (resolution == Resolution.WEEK) {
             newStartDate.setDate(newStartDate.getDate() + 7)
-        } else if (dateRange == DateRange.DAY) {
+        } else if (resolution == Resolution.DAY) {
             newStartDate.setDate(startDate.getDate() + 1)
         }
         newStartDate.setHours(0)
@@ -56,12 +56,12 @@ export function Controls(props: ControlsProps) {
         setStartDate(newStartDate)
 
         const newEndDate = new Date(newStartDate)
-        if (dateRange == DateRange.MONTH) {
+        if (resolution == Resolution.MONTH) {
             newEndDate.setMonth(newStartDate.getMonth() + 1)
             newEndDate.setDate(newEndDate.getDate() - 1)
-        } else if (dateRange == DateRange.WEEK) {
+        } else if (resolution == Resolution.WEEK) {
             newEndDate.setDate(newStartDate.getDate() + 7)
-        } else if (dateRange == DateRange.DAY) {
+        } else if (resolution == Resolution.DAY) {
             newEndDate.setDate(newStartDate.getDate())
         }
         newEndDate.setHours(23)
@@ -69,49 +69,48 @@ export function Controls(props: ControlsProps) {
         setEndDate(newEndDate)
     };
 
-    const onChangeDateRangeCb = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const newDateRange: DateRange = e.target.value as unknown as DateRange;
-        setDateRange(() => (newDateRange))
+    const onChangeResolutionCb = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const newResolution: Resolution = e.target.value as unknown as Resolution;
+        setResolution(() => (newResolution))
 
-        const newStartDate = initStartDate(new Date(startDate), newDateRange);
+        /*
+        const newStartDate = initStartDate(new Date(startDate), newResolution);
         setStartDate(() => newStartDate)
-        setEndDate(() => initEndDate(new Date(newStartDate), newDateRange))
+        setEndDate(() => initEndDate(new Date(newStartDate), newResolution))
+         */
     };
     return (<div style={{display: "flex", gap: 10}}>
 
         <div>
-            <label htmlFor={"dateRange"}>Date range: </label>
-            <select id={"dateRange"} onChange={onChangeDateRangeCb} value={props.dateRange}>
+            <label htmlFor={"resolution"}>Resolution: </label>
+            <select id={"resolution"} onChange={onChangeResolutionCb} value={props.resolution}>
                 <option value={"0"}>Day</option>
                 <option value={"1"}>Week</option>
                 <option value={"2"}>Month</option>
-                <option value={"3"}>Custom</option>
             </select>
 
-            {dateRange == DateRange.CUSTOM && (
-                <>
-                    <label htmlFor={"start"}>Start</label>
-                    <input type={"date"} id={"start"} defaultValue={formatDateToYYYYMMDD(startDate)}
-                           onBlur={e => {
-                               const val = e.target.value
-                               const date = new Date(val);
-                               date.setHours(0)
-                               date.setMinutes(0)
-                               date.setSeconds(0)
-                               setStartDate(date)
-                           }}/>
-                    <label htmlFor={"end"}>End</label>
-                    <input type={"date"} id={"end"} defaultValue={formatDateToYYYYMMDD(endDate)}
-                           onBlur={e => {
-                               const val = e.target.value
-                               const date = new Date(val);
-                               date.setHours(0)
-                               date.setMinutes(0)
-                               date.setSeconds(0)
-                               setEndDate(date)
-                           }}/>
-                </>
-            )}
+            <>
+                <label htmlFor={"start"}>Start</label>
+                <input type={"date"} id={"start"} defaultValue={formatDateToYYYYMMDD(startDate)}
+                       onBlur={e => {
+                           const val = e.target.value
+                           const date = new Date(val);
+                           date.setHours(0)
+                           date.setMinutes(0)
+                           date.setSeconds(0)
+                           setStartDate(date)
+                       }}/>
+                <label htmlFor={"end"}>End</label>
+                <input type={"date"} id={"end"} defaultValue={formatDateToYYYYMMDD(endDate)}
+                       onBlur={e => {
+                           const val = e.target.value
+                           const date = new Date(val);
+                           date.setHours(0)
+                           date.setMinutes(0)
+                           date.setSeconds(0)
+                           setEndDate(date)
+                       }}/>
+            </>
         </div>
 
 
@@ -119,31 +118,28 @@ export function Controls(props: ControlsProps) {
             Start: {formatDate(startDate)} - End: {formatDate(endDate)}
         </div>
 
-        {dateRange == DateRange.CUSTOM && (
-            <button onClick={() => {
-                setStartDate(new Date())
-                setEndDate(new Date())
-            }}>Reset</button>
-        )}
+        <button onClick={() => {
+            setStartDate(new Date())
+            setEndDate(new Date())
+        }}>Reset
+        </button>
 
-        {dateRange != DateRange.CUSTOM && (
-            <div>
-                <button onClick={onClickPrevious}>Previous
-                </button>
-                <button onClick={onClickNext}>Next
-                </button>
-            </div>
-        )}
+        <div>
+            <button onClick={onClickPrevious}>Previous
+            </button>
+            <button onClick={onClickNext}>Next
+            </button>
+        </div>
     </div>)
 }
 
-export function initStartDate(dt: Date, dateRange: DateRange) {
+export function initStartDate(dt: Date, resolution: Resolution) {
     let newDate = new Date(dt)
-    if (dateRange == DateRange.DAY) {
+    if (resolution == Resolution.DAY) {
         //Noop
-    } else if (dateRange == DateRange.WEEK) {
+    } else if (resolution == Resolution.WEEK) {
         newDate = getStartOfWeek(newDate)
-    } else if (dateRange == DateRange.MONTH) {
+    } else if (resolution == Resolution.MONTH) {
         newDate.setDate(1)
     }
 
@@ -153,12 +149,12 @@ export function initStartDate(dt: Date, dateRange: DateRange) {
     return newDate;
 }
 
-export function initEndDate(dt: Date, dateRange: DateRange) {
+export function initEndDate(dt: Date, resolution: Resolution) {
     let newDate = new Date(dt)
-    if (dateRange == DateRange.WEEK) {
+    if (resolution == Resolution.WEEK) {
         newDate = getEndOfWeek(newDate)
     }
-    if (dateRange == DateRange.MONTH) {
+    if (resolution == Resolution.MONTH) {
         newDate.setMonth(newDate.getMonth() + 1);
         newDate.setDate(0);
     }

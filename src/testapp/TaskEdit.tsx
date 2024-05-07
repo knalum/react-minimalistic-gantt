@@ -1,6 +1,6 @@
 import {Task} from "../GanttChart.tsx";
 import {useEffect, useState} from "react";
-import {formatDateToYYYYMMDD} from "../date_utils.ts";
+import {formatDate, formatDateToYYYYMMDD} from "../date_utils.ts";
 
 export default function TaskEdit(props: { task: Task, setTasks: (t: Task[]) => void, tasks: Task[] }) {
     const [task, setTask] = useState(props.task)
@@ -22,8 +22,12 @@ export default function TaskEdit(props: { task: Task, setTasks: (t: Task[]) => v
 
     return (
         <div>
-            Edit
-            {JSON.stringify(props.task, null, " ")}
+            {task.displayName}
+            <br/>
+            start: {formatDate(task.start)}
+            <br/>
+            end: {formatDate(task.end)}
+            <br/>
 
             <input type={"text"} value={task.displayName} onChange={e => {
                 setTask({...task, displayName: e.target.value})
