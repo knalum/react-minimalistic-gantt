@@ -26,7 +26,7 @@ function App() {
     ]
     return (
         <GanttChart
-            resolution = {DateRange.CUSTOM}
+            dateRange = {DateRange.CUSTOM}
             tasks = {tasks}
             startDate = {new Date("2024-01-01T00:00:00")}
             endDate = {new Date("2024-03-31T23:59:59")}
@@ -40,7 +40,7 @@ function App() {
 ### Props
 
 - tasks: Array of `Task` objects
-- resolution: `DateRange` enum `(DAY,WEEK,MONTH,CUSTOM)`
+- dateRange: `DateRange` enum `(DAY,WEEK,MONTH,CUSTOM)`
 - startDate: Start of gantt interval `Date`
 - endDate: End of gantt interval `Date`
 - onItemClick: Callback when gantt item is clicked

@@ -8,17 +8,17 @@ import "./style.css"
 import TaskEdit from "./TaskEdit.tsx";
 
 export function TestApp() {
-    const [resolution, setResolution] = useLocalStorage<DateRange>("0", DateRange.WEEK)
+    const [dateRange, setDateRange] = useLocalStorage<DateRange>("0", DateRange.WEEK)
     const [tasks, setTasks] = useState<Task[]>(createVanillaTasks())
-    const [startDate, setStartDate] = useLocalStorage<Date>("start", initStartDate(new Date(), resolution))
-    const [endDate, setEndDate] = useLocalStorage<Date>("end", initEndDate(new Date(), resolution))
+    const [startDate, setStartDate] = useLocalStorage<Date>("start", initStartDate(new Date(), dateRange))
+    const [endDate, setEndDate] = useLocalStorage<Date>("end", initEndDate(new Date(), dateRange))
 
     const [selectedTask, setSelectedTask] = useState<Task | undefined>()
     return (
         <><h4>react-minimalistic-gantt demo</h4>
             <Controls
-                resolution={resolution}
-                setResolution={setResolution}
+                dateRange={dateRange}
+                setDateRange={setDateRange}
                 startDate={new Date(startDate)}
                 setStartDate={setStartDate}
                 endDate={new Date(endDate)}
@@ -26,7 +26,7 @@ export function TestApp() {
             />
             <hr/>
             <GanttChart
-                resolution={resolution}
+                dateRange={dateRange}
                 tasks={tasks}
                 startDate={new Date(startDate)}
                 endDate={new Date(endDate)}

@@ -4,7 +4,7 @@ import {dateOverlaps, getHours, getISOWeekNumber, getNumberOfDays, HourFormat} f
 import "./style.css";
 
 export interface GanttChartProps {
-    resolution: DateRange
+    dateRange: DateRange
     tasks: Task[]
     startDate: Date
     endDate: Date
@@ -23,7 +23,7 @@ export interface GanttChartOptions {
 }
 
 export function GanttChart(props: GanttChartProps) {
-    const {resolution, startDate, endDate, tasks, options} = props;
+    const {dateRange, startDate, endDate, tasks, options} = props;
     const itemRowHeight = options?.itemRowHeight || 20
 
     const windowSize = useWindowResize();
@@ -34,55 +34,55 @@ export function GanttChart(props: GanttChartProps) {
         setFilteredTasks(filterTasks(tasks))
     }, [tasks, startDate, endDate])
 
-    function getNumLinesForResolution(): number {
-        if (resolution == DateRange.DAY) {
+    function getNumLinesForDateRange(): number {
+        if (dateRange == DateRange.DAY) {
             return 25
-        } else if (resolution == DateRange.WEEK) {
+        } else if (dateRange == DateRange.WEEK) {
             return 8
-        } else if (resolution == DateRange.MONTH) {
+        } else if (dateRange == DateRange.MONTH) {
             return 32
-        } else if (resolution == DateRange.CUSTOM) {
+        } else if (dateRange == DateRange.CUSTOM) {
             const numDays = getNumberOfDays(startDate, endDate)
             return numDays + 2
         }
         throw Error("Num lines error")
     }
 
-    function getNumHoursStepForResolution(): number {
-        if (resolution == DateRange.DAY) {
+    function getNumHoursStepForDateRange(): number {
+        if (dateRange == DateRange.DAY) {
             return 1
-        } else if (resolution == DateRange.WEEK) {
+        } else if (dateRange == DateRange.WEEK) {
             return 24
-        } else if (resolution == DateRange.MONTH) {
+        } else if (dateRange == DateRange.MONTH) {
             return 24
-        } else if (resolution == DateRange.CUSTOM) {
+        } else if (dateRange == DateRange.CUSTOM) {
             return getNumberOfDays(startDate, endDate);
         }
         throw Error("Num hours error")
     }
 
     function createColumnHeader(dt: Date): string {
-        if (resolution == DateRange.DAY) {
+        if (dateRange == DateRange.DAY) {
             return getHours(dt, options?.hourFormat)
-        } else if (resolution == DateRange.WEEK) {
+        } else if (dateRange == DateRange.WEEK) {
             return dt.toLocaleDateString(options?.locale, {weekday: 'long'}) + " " + dt.getDate();
-        } else if (resolution == DateRange.MONTH) {
+        } else if (dateRange == DateRange.MONTH) {
             return "" + dt.getDate()
-        } else if (resolution == DateRange.CUSTOM) {
+        } else if (dateRange == DateRange.CUSTOM) {
             return "" + dt.getDate()
         }
         throw new Error("Col error")
     }
 
     function createColumnHeaderTop(dt: Date): string {
-        if (resolution == DateRange.DAY) {
+        if (dateRange == DateRange.DAY) {
             return dt.toLocaleDateString(options?.locale, {weekday: "long"}) + " " + dt.getDate() + "." + dt.toLocaleString("default", {month: "long"})
-        } else if (resolution == DateRange.WEEK) {
+        } else if (dateRange == DateRange.WEEK) {
             const weekLiteral = options?.weekLiteral || "Week"
             return weekLiteral + " " + (getISOWeekNumber(dt) + 1)
-        } else if (resolution == DateRange.MONTH) {
+        } else if (dateRange == DateRange.MONTH) {
             return dt.toLocaleString(options?.locale, {month: 'long'});
-        } else if (resolution == DateRange.CUSTOM) {
+        } else if (dateRange == DateRange.CUSTOM) {
             return dt.toLocaleString(options?.locale, {month: 'long'});
         }
         throw new Error("Col header top err")
@@ -91,10 +91,10 @@ export function GanttChart(props: GanttChartProps) {
     function calcHeader1(): Line[] {
         const lines: Line[] = []
 
-        const numCols = getNumLinesForResolution()
+        const numCols = getNumLinesForDateRange()
         let lastMonth = null
         for (let i = 0; i < numCols; i++) {
-            const dt = new Date(getStartOfResolution().getTime())
+            const dt = new Date(getStartOfDateRange().getTime())
 
             dt.setHours(dt.getHours() + 24 * i)
             if (dt.getMonth() != lastMonth) {
@@ -108,12 +108,12 @@ export function GanttChart(props: GanttChartProps) {
     function calcLines(): Line[] {
         const lines: Line[] = []
 
-        const numLines = getNumLinesForResolution()
+        const numLines = getNumLinesForDateRange()
 
         for (let i = 0; i < numLines; i++) {
 
-            const dt = new Date(getStartOfResolution().getTime())
-            dt.setHours(dt.getHours() + getNumHoursStepForResolution() * i)
+            const dt = new Date(getStartOfDateRange().getTime())
+            dt.setHours(dt.getHours() + getNumHoursStepForDateRange() * i)
 
             let column = createColumnHeader(dt);
             if (i == numLines - 1) {
@@ -124,17 +124,17 @@ export function GanttChart(props: GanttChartProps) {
         return lines;
     }
 
-    function getStartOfResolution(): Date {
+    function getStartOfDateRange(): Date {
         return startDate;
     }
 
-    function getEndOfResolution(): Date {
+    function getEndOfDateRange(): Date {
         return endDate;
     }
 
     function dateToX(date: Date): number {
-        const startSec = date.getTime() - getStartOfResolution().getTime();
-        const interval = getEndOfResolution().getTime() - getStartOfResolution().getTime()
+        const startSec = date.getTime() - getStartOfDateRange().getTime();
+        const interval = getEndOfDateRange().getTime() - getStartOfDateRange().getTime()
         return windowSize.width * startSec / interval
     }
 
