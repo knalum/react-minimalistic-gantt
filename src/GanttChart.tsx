@@ -46,7 +46,19 @@ export function GanttChart(props: GanttChartProps) {
         throw Error("Num lines error")
     }
 
-    function getNumHoursStepForResolution(): number {
+    function getNumLinesForResolutionBottom(): number {
+        const numdays = getNumberOfDays(startDate, endDate);
+        if (resolution == Resolution.DAY) {
+            return 24 * numdays
+        } else if (resolution == Resolution.WEEK) {
+            return numdays + 1
+        } else if (resolution == Resolution.MONTH) {
+            return numdays + 1
+        }
+        throw Error("Num lines error")
+    }
+
+    function getNumHoursStepForResolutionBottomHeader(): number {
         if (resolution == Resolution.DAY) {
             const numdays = getNumberOfDays(startDate, endDate);
             return numdays
@@ -82,7 +94,7 @@ export function GanttChart(props: GanttChartProps) {
         throw new Error("Col header top err")
     }
 
-    function calcHeader1(): Line[] {
+    function calcHeaderTop(): Line[] {
         const lines: Line[] = []
 
         const numCols = getNumLinesForResolution()
@@ -112,14 +124,14 @@ export function GanttChart(props: GanttChartProps) {
         return lines;
     }
 
-    function calcLines(): Line[] {
+    function calcLinesForHeaderBottom(): Line[] {
         const lines: Line[] = []
 
-        const numLines = getNumLinesForResolution()
+        const numLines = getNumLinesForResolutionBottom()
         for (let i = 0; i < numLines; i++) {
 
             const dt = new Date(getStartOfResolution().getTime())
-            dt.setHours(dt.getHours() + getNumHoursStepForResolution() * i)
+            dt.setHours(dt.getHours() + getNumHoursStepForResolutionBottomHeader() * i)
 
             let column = createColumnHeaderBottom(dt);
             if (i == numLines - 1) {
@@ -179,19 +191,19 @@ export function GanttChart(props: GanttChartProps) {
     }
     const headerMargin = 40
 
-    const header1 = calcHeader1()
-    const header2 = calcLines()
+    const headerTop = calcHeaderTop()
+    const headerBottom = calcLinesForHeaderBottom()
 
     function calcWidth(idx: number) {
-        if (idx < header1.length - 1) {
-            return dateToX(header1[idx + 1].start) - dateToX(header1[idx].start)
+        if (idx < headerTop.length - 1) {
+            return dateToX(headerTop[idx + 1].start) - dateToX(headerTop[idx].start)
         }
         return 150;
     }
 
     function calcWidth2(idx: number) {
-        if (idx < header2.length - 1) {
-            return dateToX(header2[idx + 1].start) - dateToX(header2[idx].start)
+        if (idx < headerBottom.length - 1) {
+            return dateToX(headerBottom[idx + 1].start) - dateToX(headerBottom[idx].start)
         }
         return 100;
     }
@@ -210,7 +222,7 @@ export function GanttChart(props: GanttChartProps) {
             ))}
         </svg>
         <svg style={{width: windowSize.width, height: calcSvgHeight()}}>
-            {header1.map((line, idx) => (<React.Fragment key={idx}>
+            {headerTop.map((line, idx) => (<React.Fragment key={idx}>
                     <line x1={dateToX(line.start)}
                           x2={dateToX(line.start)}
                           y1={0}
@@ -232,7 +244,7 @@ export function GanttChart(props: GanttChartProps) {
                 </React.Fragment>
             ))}
             <line x1={0} x2={windowSize.width} y1={20} y2={20} stroke={"grey"}/>
-            {header2.map((line, idx) => (<React.Fragment key={idx}>
+            {headerBottom.map((line, idx) => (<React.Fragment key={idx}>
                     <foreignObject x={dateToX(line.start)}
                                    y={20}
                                    width={calcWidth2(idx)}
