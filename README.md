@@ -2,6 +2,8 @@
 
 A minimalistic gantt component for react
 
+https://www.npmjs.com/package/react-minimalistic-gantt
+
 #### Demo
 
 https://knalum.github.io/react-minimalistic-gantt/
